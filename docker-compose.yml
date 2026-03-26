@@ -1,20 +1,22 @@
 version: '3'
 
 services:
-  frontend:
-    image: sridharbr28/mern-frontend
-    container_name: frontend-container
-    ports:
-      - "3000:80"
+  mongo:
+    image: mongo
+    container_name: mongo-container
 
   backend:
     image: sridharbr28/mern-backend
     container_name: backend-container
+    depends_on:
+      - mongo
     ports:
       - "5000:5000"
 
-  mongo:
-    image: mongo
-    container_name: mongo-container
+  frontend:
+    image: sridharbr28/mern-frontend
+    container_name: frontend-container
+    depends_on:
+      - backend
     ports:
-      - "27017:27017"
+      - "3000:80"
