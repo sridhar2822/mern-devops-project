@@ -4,12 +4,16 @@ services:
   mongo:
     image: mongo
     container_name: mongo-container
+    volumes:
+      - mongo-data:/data/db
 
   backend:
     image: sridharbr28/mern-backend
     container_name: backend-container
     depends_on:
       - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/mern-db
     ports:
       - "5000:5000"
 
@@ -20,3 +24,20 @@ services:
       - backend
     ports:
       - "3000:80"
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus-container
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana-container
+    ports:
+      - "3001:3000"
+
+volumes:
+  mongo-data:
